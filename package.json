@@ -1,0 +1,28 @@
+{
+  "name": "x-api-post-planner",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["twitter", "api", "scheduler", "automation"],
+  "author": "",
+  "license": "ISC",
+  "description": "X (Twitter) API Post Scheduler with OAuth 1.1a",
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "twitter-api-v2": "^1.17.2",
+    "uuid": "^11.0.3",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "moment": "^2.30.1",
+    "sqlite3": "^5.1.6",
+    "rate-limiter-flexible": "^4.0.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

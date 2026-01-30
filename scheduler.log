@@ -1,0 +1,155 @@
+[09.09.2025 02:29:02] ✅ SUCCESS: DATABASE_INIT
+   📝 Result: Connected to SQLite database successfully
+   ❌ Error: /Users/a/Desktop/x-api-post-planner/x-scheduler.db
+   ──────────────────────────────────────────────────
+[09.09.2025 02:29:02] 📋 INFO: DATABASE_MIGRATION
+   📝 Result: No existing schedule.json file found, skipping migration
+   ──────────────────────────────────────────────────
+[09.09.2025 02:29:02] ✅ SUCCESS: DATABASE_MIGRATION
+   📝 Result: Data migration completed successfully
+   ──────────────────────────────────────────────────
+[09.09.2025 02:29:02] 📋 INFO: RATE_LIMIT_INIT
+   📝 Result: Initializing rate limiters with database values
+   ──────────────────────────────────────────────────
+[09.09.2025 02:29:02] ✅ SUCCESS: DATABASE_TABLE_CREATE
+   📝 Result: Tweets table created/verified successfully
+   ──────────────────────────────────────────────────
+[09.09.2025 02:29:02] ✅ SUCCESS: DATABASE_TABLE_CREATE
+   📝 Result: Rate limits table created/verified successfully
+   ──────────────────────────────────────────────────
+[09.09.2025 02:29:35] ✅ SUCCESS: DATABASE_INIT
+   📝 Result: Connected to SQLite database successfully
+   ❌ Error: /Users/a/Desktop/x-api-post-planner/x-scheduler.db
+   ──────────────────────────────────────────────────
+[09.09.2025 02:29:35] 📋 INFO: DATABASE_MIGRATION
+   📝 Result: No existing schedule.json file found, skipping migration
+   ──────────────────────────────────────────────────
+[09.09.2025 02:29:35] ✅ SUCCESS: DATABASE_MIGRATION
+   📝 Result: Data migration completed successfully
+   ──────────────────────────────────────────────────
+[09.09.2025 02:29:35] 📋 INFO: RATE_LIMIT_INIT
+   📝 Result: Initializing rate limiters with database values
+   ──────────────────────────────────────────────────
+[09.09.2025 02:29:35] ✅ SUCCESS: DATABASE_TABLE_CREATE
+   📝 Result: Tweets table created/verified successfully
+   ──────────────────────────────────────────────────
+[09.09.2025 02:29:35] ✅ SUCCESS: DATABASE_TABLE_CREATE
+   📝 Result: Rate limits table created/verified successfully
+   ──────────────────────────────────────────────────
+[09.09.2025 02:29:35] ✅ SUCCESS: RATE_LIMIT_INIT
+   📝 Result: Rate limiters initialized successfully
+   ──────────────────────────────────────────────────
+[09.09.2025 02:29:35] ✅ SUCCESS: DATABASE_INIT
+   📝 Result: Database fully initialized with tables, migration and rate limiters
+   ──────────────────────────────────────────────────
+[09.09.2025 02:29:36] 📋 INFO: SCHEDULER_CHECK
+   📝 Result: No tweets due for posting
+   ──────────────────────────────────────────────────
+[09.09.2025 02:30:00] 📋 INFO: SCHEDULER_CHECK
+   📝 Result: No tweets due for posting
+   ──────────────────────────────────────────────────
+[09.09.2025 02:30:22] ✅ SUCCESS: TWEET_ADDED
+   📝 Result: Tweet added successfully via API
+   ──────────────────────────────────────────────────
+[09.09.2025 02:30:43] ✅ SUCCESS: TWEET_ADDED
+   📝 Result: Tweet added successfully via API
+   ──────────────────────────────────────────────────
+[09.09.2025 02:30:52] ✅ SUCCESS: TWEET_ADDED
+   📝 Result: Tweet added successfully via API
+   ──────────────────────────────────────────────────
+[09.09.2025 02:31:00] 📋 INFO: SCHEDULER_PROCESS
+   📝 Result: Processing 3 due tweets
+   ──────────────────────────────────────────────────
+[09.09.2025 02:31:00] 🔍 DEBUG: SCHEDULER_TWEET_PROCESS
+   📝 Result: Processing tweet 66ef5cdd-dc27-499f-80ba-faa760f9395f
+   ──────────────────────────────────────────────────
+[09.09.2025 02:31:00] 📋 INFO: RATE_LIMIT_CONSUME
+   📝 Result: Rate limits consumed successfully
+   ──────────────────────────────────────────────────
+[09.09.2025 02:31:00] ✅ SUCCESS: TWEET_POSTED
+   📝 Result: Tweet posted successfully to Twitter
+   ──────────────────────────────────────────────────
+[09.09.2025 02:31:00] ✅ SUCCESS: SCHEDULER_TWEET_SUCCESS
+   📝 Result: Tweet posted successfully to Twitter
+   ──────────────────────────────────────────────────
+[09.09.2025 02:31:00] 🔍 DEBUG: SCHEDULER_TWEET_PROCESS
+   📝 Result: Processing tweet 648d4149-52b4-4960-b37d-0604cf5127c9
+   ──────────────────────────────────────────────────
+[09.09.2025 02:31:00] 📋 INFO: RATE_LIMIT_CONSUME
+   📝 Result: Rate limits consumed successfully
+   ──────────────────────────────────────────────────
+[09.09.2025 02:31:00] ✅ SUCCESS: TWEET_ADDED
+   📝 Result: Tweet added successfully via API
+   ──────────────────────────────────────────────────
+[09.09.2025 02:31:00] ✅ SUCCESS: TWEET_POSTED
+   📝 Result: Tweet posted successfully to Twitter
+   ──────────────────────────────────────────────────
+[09.09.2025 02:31:00] ✅ SUCCESS: SCHEDULER_TWEET_SUCCESS
+   📝 Result: Tweet posted successfully to Twitter
+   ──────────────────────────────────────────────────
+[09.09.2025 02:31:00] 🔍 DEBUG: SCHEDULER_TWEET_PROCESS
+   📝 Result: Processing tweet 51c43f7e-c42a-46fc-9811-6e029651c693
+   ──────────────────────────────────────────────────
+[09.09.2025 02:31:00] 📋 INFO: RATE_LIMIT_CONSUME
+   📝 Result: Rate limits consumed successfully
+   ──────────────────────────────────────────────────
+[09.09.2025 02:31:00] ✅ SUCCESS: TWEET_POSTED
+   📝 Result: Tweet posted successfully to Twitter
+   ──────────────────────────────────────────────────
+[09.09.2025 02:31:00] ✅ SUCCESS: SCHEDULER_TWEET_SUCCESS
+   📝 Result: Tweet posted successfully to Twitter
+   ──────────────────────────────────────────────────
+[09.09.2025 02:31:00] ✅ SUCCESS: SCHEDULER_COMPLETED
+   📝 Result: Scheduler cycle completed
+   ──────────────────────────────────────────────────
+[09.09.2025 02:31:54] ✅ SUCCESS: TWEET_ADDED
+   📝 Result: Tweet added successfully via API
+   ──────────────────────────────────────────────────
+[09.09.2025 02:32:00] 📋 INFO: SCHEDULER_PROCESS
+   📝 Result: Processing 2 due tweets
+   ──────────────────────────────────────────────────
+[09.09.2025 02:32:00] 🔍 DEBUG: SCHEDULER_TWEET_PROCESS
+   📝 Result: Processing tweet fe97d4c2-90cc-4821-b4df-593a3c40e6e7
+   ──────────────────────────────────────────────────
+[09.09.2025 02:32:00] ⚠️ WARN: RATE_LIMIT
+   📝 Result: Rate limit exceeded, retry in 1 minutes
+   ──────────────────────────────────────────────────
+[09.09.2025 02:32:00] ⚠️ WARN: SCHEDULER_TWEET_RATE_LIMIT
+   📝 Result: Tweet postponed due to rate limit
+   ──────────────────────────────────────────────────
+[09.09.2025 02:32:00] 🔍 DEBUG: SCHEDULER_TWEET_PROCESS
+   📝 Result: Processing tweet b829aba3-b079-433d-b1bc-8dbf1e5740bd
+   ──────────────────────────────────────────────────
+[09.09.2025 02:32:00] 📋 INFO: RATE_LIMIT_CONSUME
+   📝 Result: Rate limits consumed successfully
+   ──────────────────────────────────────────────────
+[09.09.2025 02:32:00] ✅ SUCCESS: TWEET_POSTED
+   📝 Result: Tweet posted successfully to Twitter
+   ──────────────────────────────────────────────────
+[09.09.2025 02:32:00] ✅ SUCCESS: SCHEDULER_TWEET_SUCCESS
+   📝 Result: Tweet posted successfully to Twitter
+   ──────────────────────────────────────────────────
+[09.09.2025 02:32:00] ✅ SUCCESS: SCHEDULER_COMPLETED
+   📝 Result: Scheduler cycle completed
+   ──────────────────────────────────────────────────
+[09.09.2025 02:33:00] 📋 INFO: SCHEDULER_PROCESS
+   📝 Result: Processing 1 due tweets
+   ──────────────────────────────────────────────────
+[09.09.2025 02:33:00] 🔍 DEBUG: SCHEDULER_TWEET_PROCESS
+   📝 Result: Processing tweet fe97d4c2-90cc-4821-b4df-593a3c40e6e7
+   ──────────────────────────────────────────────────
+[09.09.2025 02:33:00] 📋 INFO: RATE_LIMIT_CONSUME
+   📝 Result: Rate limits consumed successfully
+   ──────────────────────────────────────────────────
+[09.09.2025 02:33:00] ✅ SUCCESS: TWEET_POSTED
+   📝 Result: Tweet posted successfully to Twitter
+   ──────────────────────────────────────────────────
+[09.09.2025 02:33:00] ✅ SUCCESS: SCHEDULER_TWEET_SUCCESS
+   📝 Result: Tweet posted successfully to Twitter
+   ──────────────────────────────────────────────────
+[09.09.2025 02:33:00] ✅ SUCCESS: SCHEDULER_COMPLETED
+   📝 Result: Scheduler cycle completed
+   ──────────────────────────────────────────────────
+[09.09.2025 02:33:59] 📋 INFO: SCHEDULER_CHECK
+   📝 Result: No tweets due for posting
+   ──────────────────────────────────────────────────

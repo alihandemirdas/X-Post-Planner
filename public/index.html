@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X Post Planner Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'x-black': '#000000',
+                        'x-dark': '#0f0f0f',
+                        'x-dark-blue': '#1a1a2e',
+                        'x-gradient-start': '#0f0f0f',
+                        'x-gradient-end': '#1a1a2e',
+                        'x-gray': '#2a2a3a',
+                        'x-light-gray': '#4a4a5a',
+                        'x-text': '#e0e0e0',
+                        'x-text-light': '#b0b0b0',
+                        'x-blue': '#1d9bf0',
+                        'x-light-blue': '#4fc3f7',
+                        'x-green': '#00ba7c',
+                        'x-red': '#ff4757',
+                        'x-orange': '#ffa726',
+                        'x-purple': '#6c5ce7'
+                    },
+                    backgroundImage: {
+                        'x-gradient': 'linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%)',
+                        'x-gradient-navbar': 'linear-gradient(135deg, #000000 0%, #1a1a2e 100%)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2f2f2f;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #404040;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-x-gradient-navbar border-b border-x-gray/20 shadow-2xl backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <div class="w-10 h-10 bg-gradient-to-br from-x-blue to-x-light-blue rounded-xl flex items-center justify-center mr-3 shadow-lg">
+                            <span class="text-white font-black text-lg">X</span>
+                        </div>
+                        <h1 class="text-x-text font-bold text-xl tracking-wide">Post Planner</h1>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <div class="flex items-center space-x-2 text-x-text">
+                        <i class="fas fa-clock text-x-blue"></i>
+                        <span id="currentTime" class="text-sm font-medium"></span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="w-3 h-3 bg-x-green rounded-full animate-pulse shadow-lg shadow-x-green/50"></div>
+                        <span class="text-x-text text-sm font-medium">Aktif</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="min-h-screen bg-x-gradient">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-gradient-to-br from-x-gray to-x-dark-blue rounded-xl p-6 border border-x-light-gray/30 hover:border-x-blue/60 transition-all duration-300 shadow-lg hover:shadow-xl">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-x-text-light text-sm font-medium uppercase tracking-wide">Toplam Tweet</p>
+                            <p id="totalTweets" class="text-x-text text-3xl font-bold mt-1">0</p>
+                        </div>
+                        <div class="p-3 bg-gradient-to-br from-x-blue to-x-light-blue rounded-xl shadow-lg">
+                            <i class="fas fa-list text-white text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-x-gray to-x-dark-blue rounded-xl p-6 border border-x-light-gray/30 hover:border-x-orange/60 transition-all duration-300 shadow-lg hover:shadow-xl">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-x-text-light text-sm font-medium uppercase tracking-wide">Bekliyor</p>
+                            <p id="pendingTweets" class="text-x-text text-3xl font-bold mt-1">0</p>
+                        </div>
+                        <div class="p-3 bg-gradient-to-br from-x-orange to-yellow-400 rounded-xl shadow-lg">
+                            <i class="fas fa-clock text-white text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-x-gray to-x-dark-blue rounded-xl p-6 border border-x-light-gray/30 hover:border-x-green/60 transition-all duration-300 shadow-lg hover:shadow-xl">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-x-text-light text-sm font-medium uppercase tracking-wide">Gönderildi</p>
+                            <p id="postedTweets" class="text-x-text text-3xl font-bold mt-1">0</p>
+                        </div>
+                        <div class="p-3 bg-gradient-to-br from-x-green to-emerald-400 rounded-xl shadow-lg">
+                            <i class="fas fa-check text-white text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-x-gray to-x-dark-blue rounded-xl p-6 border border-x-light-gray/30 hover:border-x-red/60 transition-all duration-300 shadow-lg hover:shadow-xl">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-x-text-light text-sm font-medium uppercase tracking-wide">Başarısız</p>
+                            <p id="failedTweets" class="text-x-text text-3xl font-bold mt-1">0</p>
+                        </div>
+                        <div class="p-3 bg-gradient-to-br from-x-red to-pink-400 rounded-xl shadow-lg">
+                            <i class="fas fa-exclamation-triangle text-white text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rate Limits -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl p-6 text-white shadow-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold tracking-wide">Günlük Limit</h3>
+                            <p class="text-blue-200 text-sm opacity-90">Kalan tweet sayısı</p>
+                        </div>
+                        <div class="p-2 bg-white bg-opacity-20 rounded-lg">
+                            <i class="fas fa-calendar-day text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="text-4xl font-black mb-3" id="dailyRemaining">300</div>
+                    <div class="bg-white bg-opacity-30 rounded-full h-3 overflow-hidden">
+                        <div class="bg-white h-3 rounded-full transition-all duration-500 ease-out" id="dailyProgress" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-orange-500 to-yellow-600 rounded-xl p-6 text-white shadow-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold tracking-wide">Saatlik Limit</h3>
+                            <p class="text-orange-200 text-sm opacity-90">Kalan tweet sayısı</p>
+                        </div>
+                        <div class="p-2 bg-white bg-opacity-20 rounded-lg">
+                            <i class="fas fa-clock text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="text-4xl font-black mb-3" id="hourlyRemaining">50</div>
+                    <div class="bg-white bg-opacity-30 rounded-full h-3 overflow-hidden">
+                        <div class="bg-white h-3 rounded-full transition-all duration-500 ease-out" id="hourlyProgress" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-red-500 to-pink-600 rounded-xl p-6 text-white shadow-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold tracking-wide">Dakikalık Limit</h3>
+                            <p class="text-red-200 text-sm opacity-90">Kalan tweet sayısı</p>
+                        </div>
+                        <div class="p-2 bg-white bg-opacity-20 rounded-lg">
+                            <i class="fas fa-stopwatch text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="text-4xl font-black mb-3" id="minuteRemaining">5</div>
+                    <div class="bg-white bg-opacity-30 rounded-full h-3 overflow-hidden">
+                        <div class="bg-white h-3 rounded-full transition-all duration-500 ease-out" id="minuteProgress" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Tweet Form -->
+            <div class="bg-gradient-to-br from-x-gray to-x-dark-blue rounded-xl p-8 border border-x-light-gray/30 shadow-2xl mb-8">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-x-text text-2xl font-bold flex items-center tracking-wide">
+                        <div class="w-10 h-10 bg-gradient-to-br from-x-blue to-x-light-blue rounded-xl flex items-center justify-center mr-4 shadow-lg">
+                            <i class="fas fa-plus text-white text-lg"></i>
+                        </div>
+                        Yeni Tweet Ekle
+                    </h2>
+                </div>
+
+                <form id="tweetForm" class="space-y-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2">
+                            <label for="tweetText" class="block text-sm font-semibold text-x-text-light mb-3 uppercase tracking-wide">
+                                Tweet Metni
+                            </label>
+                            <textarea
+                                class="w-full px-5 py-4 bg-x-dark border-2 border-x-light-gray/50 rounded-xl text-x-text placeholder-x-light-gray focus:ring-2 focus:ring-x-blue focus:border-x-blue/50 resize-none text-lg leading-relaxed transition-all duration-200"
+                                id="tweetText"
+                                rows="4"
+                                placeholder="Tweet'inizi yazın..."
+                                maxlength="280"
+                                required
+                            ></textarea>
+                            <div class="flex justify-between items-center mt-4">
+                                <span class="text-x-light-gray text-sm font-medium">
+                                    <span id="charCount" class="text-x-blue font-bold">0</span>/280 karakter
+                                </span>
+                                <div class="flex space-x-3">
+                                    <button type="button" class="text-2xl hover:scale-110 transition-transform duration-200" onclick="addEmoji('😊')" title="Gülümse">😊</button>
+                                    <button type="button" class="text-2xl hover:scale-110 transition-transform duration-200" onclick="addEmoji('🚀')" title="Roket">🚀</button>
+                                    <button type="button" class="text-2xl hover:scale-110 transition-transform duration-200" onclick="addEmoji('💡')" title="Ampul">💡</button>
+                                    <button type="button" class="text-2xl hover:scale-110 transition-transform duration-200" onclick="addEmoji('📅')" title="Takvim">📅</button>
+                                    <button type="button" class="text-2xl hover:scale-110 transition-transform duration-200" onclick="addEmoji('⭐')" title="Yıldız">⭐</button>
+                                    <button type="button" class="text-2xl hover:scale-110 transition-transform duration-200" onclick="addEmoji('🔥')" title="Ateş">🔥</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="tweetDateTime" class="block text-sm font-semibold text-x-text-light mb-3 uppercase tracking-wide">
+                                Tarih ve Saat
+                            </label>
+                            <input
+                                type="datetime-local"
+                                class="w-full px-5 py-4 bg-x-dark border-2 border-x-light-gray/50 rounded-xl text-x-text focus:ring-2 focus:ring-x-blue focus:border-x-blue/50 text-lg font-medium transition-all duration-200"
+                                id="tweetDateTime"
+                                required
+                            >
+                            <div class="mt-3 p-3 bg-x-blue/10 rounded-lg border border-x-blue/20">
+                                <p class="text-x-blue text-sm font-medium flex items-center">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    İstanbul saati (+03:00) olarak ayarlanır
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-4">
+                        <button
+                            type="submit"
+                            class="bg-gradient-to-r from-x-blue to-x-light-blue hover:from-x-light-blue hover:to-x-blue text-white font-bold px-8 py-4 rounded-xl transition-all duration-300 flex items-center space-x-3 shadow-lg hover:shadow-xl transform hover:scale-105"
+                            id="submitBtn"
+                        >
+                            <i class="fas fa-plus text-lg"></i>
+                            <span class="text-lg">Tweet Ekle</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tweet List -->
+            <div class="bg-gradient-to-br from-x-gray to-x-dark-blue rounded-xl border border-x-light-gray/30 shadow-2xl overflow-hidden">
+                <div class="p-8 border-b border-x-light-gray/30">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-x-text text-2xl font-bold flex items-center tracking-wide">
+                            <div class="w-10 h-10 bg-gradient-to-br from-x-blue to-x-light-blue rounded-xl flex items-center justify-center mr-4 shadow-lg">
+                                <i class="fas fa-list text-white text-lg"></i>
+                            </div>
+                            Tweet Listesi
+                        </h2>
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-3 bg-x-dark px-4 py-2 rounded-lg border border-x-light-gray/30">
+                                <div class="w-3 h-3 bg-x-green rounded-full animate-pulse shadow-lg shadow-x-green/50"></div>
+                                <span class="text-x-text-light text-sm font-medium">Canlı Güncelleme</span>
+                            </div>
+                            <button
+                                class="bg-gradient-to-r from-x-blue to-x-light-blue hover:from-x-light-blue hover:to-x-blue text-white px-6 py-3 rounded-xl transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105"
+                                onclick="loadTweets()"
+                            >
+                                <i class="fas fa-sync-alt"></i>
+                                <span class="font-medium">Yenile</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8">
+                    <div id="tweetsList">
+                        <div class="text-center py-16">
+                            <div class="animate-spin w-12 h-12 border-4 border-x-blue border-t-transparent rounded-full mx-auto mb-6"></div>
+                            <p class="text-x-light-gray text-lg font-medium">Tweet'ler yükleniyor...</p>
+                            <p class="text-x-light-gray text-sm mt-2">Lütfen bekleyin</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Edit Tweet Modal -->
+    <div class="fixed inset-0 bg-black bg-opacity-60 hidden z-50 backdrop-blur-sm" id="editModal">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-gradient-to-br from-x-gray to-x-dark-blue rounded-2xl max-w-2xl w-full border border-x-light-gray/30 shadow-2xl">
+                <div class="p-8 border-b border-x-light-gray/30">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-x-text text-2xl font-bold tracking-wide">Tweet Düzenle</h3>
+                        <button onclick="closeModal()" class="text-x-light-gray hover:text-white transition-colors duration-200 p-2 hover:bg-x-light-gray/20 rounded-lg">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="p-8">
+                    <form id="editForm" class="space-y-6">
+                        <div>
+                            <label for="editText" class="block text-sm font-semibold text-x-text-light mb-3 uppercase tracking-wide">
+                                Tweet Metni
+                            </label>
+                            <textarea
+                                class="w-full px-5 py-4 bg-x-dark border-2 border-x-light-gray/50 rounded-xl text-x-text placeholder-x-light-gray focus:ring-2 focus:ring-x-blue focus:border-x-blue/50 resize-none text-lg leading-relaxed transition-all duration-200"
+                                id="editText"
+                                rows="4"
+                                maxlength="280"
+                            ></textarea>
+                        </div>
+
+                        <div>
+                            <label for="editDateTime" class="block text-sm font-semibold text-x-text-light mb-3 uppercase tracking-wide">
+                                Tarih ve Saat
+                            </label>
+                            <input
+                                type="datetime-local"
+                                class="w-full px-5 py-4 bg-x-dark border-2 border-x-light-gray/50 rounded-xl text-x-text focus:ring-2 focus:ring-x-blue focus:border-x-blue/50 text-lg font-medium transition-all duration-200"
+                                id="editDateTime"
+                            >
+                            <div class="mt-3 p-3 bg-x-blue/10 rounded-lg border border-x-blue/20">
+                                <p class="text-x-blue text-sm font-medium flex items-center">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    İstanbul saati (+03:00) olarak ayarlanır
+                                </p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="p-8 border-t border-x-light-gray/30 flex justify-end space-x-4">
+                    <button
+                        onclick="closeModal()"
+                        class="px-6 py-3 bg-x-dark hover:bg-x-light-gray text-x-text hover:text-white rounded-xl transition-all duration-200 font-medium"
+                    >
+                        İptal
+                    </button>
+                    <button
+                        onclick="updateTweet()"
+                        class="px-6 py-3 bg-gradient-to-r from-x-blue to-x-light-blue hover:from-x-light-blue hover:to-x-blue text-white rounded-xl transition-all duration-300 font-bold shadow-lg hover:shadow-xl transform hover:scale-105"
+                    >
+                        Güncelle
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTweetId = null;
+        let autoRefreshInterval = null;
+
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            const options = {
+                timeZone: 'Europe/Istanbul',
+                hour12: false,
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            document.getElementById('currentTime').textContent =
+                now.toLocaleString('tr-TR', options) + ' (İstanbul)';
+        }
+
+        // Add emoji to tweet text
+        function addEmoji(emoji) {
+            const textarea = document.getElementById('tweetText');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            const before = text.substring(0, start);
+            const after = text.substring(end, text.length);
+            textarea.value = before + emoji + after;
+            textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
+            textarea.focus();
+            updateCharCount();
+        }
+
+        // Update character count
+        function updateCharCount() {
+            const text = document.getElementById('tweetText').value;
+            const count = text.length;
+            const charCountElement = document.getElementById('charCount');
+
+            charCountElement.textContent = count;
+
+            // Remove existing classes
+            charCountElement.classList.remove('text-red-400', 'text-orange-400', 'text-x-blue');
+
+            // Add appropriate class based on character count
+            if (count > 260) {
+                charCountElement.classList.add('text-red-400');
+            } else if (count > 240) {
+                charCountElement.classList.add('text-orange-400');
+            } else {
+                charCountElement.classList.add('text-x-blue');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
+
+        // Character counter
+        document.getElementById('tweetText').addEventListener('input', updateCharCount);
+
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                const response = await fetch('/api/dashboard');
+                const result = await response.json();
+
+                if (result.success) {
+                    const data = result.data;
+
+                    // Update stats with animation
+                    animateNumber('totalTweets', data.total);
+                    animateNumber('pendingTweets', data.pending);
+                    animateNumber('postedTweets', data.posted);
+                    animateNumber('failedTweets', data.failed);
+
+                    // Update rate limits
+                    if (data.rateLimits) {
+                        const dailyTotal = 300;
+                        const hourlyTotal = 50;
+                        const minuteTotal = 5;
+
+                        animateNumber('dailyRemaining', data.rateLimits.daily.remaining);
+                        animateNumber('hourlyRemaining', data.rateLimits.hourly.remaining);
+                        animateNumber('minuteRemaining', data.rateLimits.minute.remaining);
+
+                        // Update progress bars
+                        updateProgressBar('dailyProgress', data.rateLimits.daily.remaining, dailyTotal);
+                        updateProgressBar('hourlyProgress', data.rateLimits.hourly.remaining, hourlyTotal);
+                        updateProgressBar('minuteProgress', data.rateLimits.minute.remaining, minuteTotal);
+                    }
+                }
+            } catch (error) {
+                console.error('Dashboard yükleme hatası:', error);
+            }
+        }
+
+        // Animate number changes
+        function animateNumber(elementId, targetValue) {
+            const element = document.getElementById(elementId);
+            const currentValue = parseInt(element.textContent) || 0;
+            const difference = targetValue - currentValue;
+            const duration = 500;
+            const steps = 20;
+            const stepValue = difference / steps;
+            let currentStep = 0;
+
+            const timer = setInterval(() => {
+                currentStep++;
+                const newValue = Math.round(currentValue + (stepValue * currentStep));
+                element.textContent = newValue;
+
+                if (currentStep >= steps) {
+                    clearInterval(timer);
+                    element.textContent = targetValue;
+                }
+            }, duration / steps);
+        }
+
+        // Update progress bars
+        function updateProgressBar(elementId, remaining, total) {
+            const percentage = ((total - remaining) / total) * 100;
+            document.getElementById(elementId).style.width = Math.min(percentage, 100) + '%';
+        }
+
+        // Load tweets
+        async function loadTweets() {
+            try {
+                const response = await fetch('/api/tweets');
+                const result = await response.json();
+
+                if (result.success) {
+                    displayTweets(result.data);
+                }
+            } catch (error) {
+                console.error('Tweet yükleme hatası:', error);
+                document.getElementById('tweetsList').innerHTML =
+                    '<div class="alert alert-danger">Tweet\'ler yüklenirken hata oluştu</div>';
+            }
+        }
+
+        // Display tweets
+        function displayTweets(tweets) {
+            if (tweets.length === 0) {
+                document.getElementById('tweetsList').innerHTML = `
+                    <div class="text-center py-12">
+                        <i class="fas fa-inbox text-6xl text-x-light-gray mb-4"></i>
+                        <p class="text-x-light-gray text-lg">Henüz tweet eklenmemiş</p>
+                        <p class="text-x-light-gray text-sm">Yukarıdan yeni tweet ekleyebilirsiniz</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const tweetsHtml = tweets
+                .sort((a, b) => new Date(a.runAt) - new Date(b.runAt))
+                .map(tweet => {
+                    const runAt = new Date(tweet.runAt);
+                    const now = new Date();
+                    const isUpcoming = runAt > now;
+                    const isPast = runAt <= now;
+
+                    let statusClass = '';
+                    let statusText = '';
+                    let statusColor = '';
+
+                    switch (tweet.status) {
+                        case 'pending':
+                            if (isPast) {
+                                statusClass = 'bg-x-orange text-white';
+                                statusText = 'Zamanı Geçti';
+                                statusColor = 'text-x-orange';
+                            } else {
+                                statusClass = 'bg-x-blue text-white';
+                                statusText = 'Bekliyor';
+                                statusColor = 'text-x-blue';
+                            }
+                            break;
+                        case 'posted':
+                            statusClass = 'bg-x-green text-white';
+                            statusText = 'Gönderildi';
+                            statusColor = 'text-x-green';
+                            break;
+                        case 'failed':
+                            statusClass = 'bg-x-red text-white';
+                            statusText = 'Başarısız';
+                            statusColor = 'text-x-red';
+                            break;
+                        default:
+                            statusClass = 'bg-x-light-gray text-x-dark';
+                            statusText = tweet.status;
+                            statusColor = 'text-x-light-gray';
+                    }
+
+                    const timeDisplay = runAt.toLocaleString('tr-TR', {
+                        timeZone: 'Europe/Istanbul',
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    const timeDiff = Math.abs(now - runAt);
+                    const minutesDiff = Math.floor(timeDiff / (1000 * 60));
+                    const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
+                    const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+                    let timeInfo = '';
+                    if (isUpcoming) {
+                        if (minutesDiff < 60) {
+                            timeInfo = `${minutesDiff} dk sonra`;
+                        } else if (hoursDiff < 24) {
+                            timeInfo = `${hoursDiff} saat sonra`;
+                        } else {
+                            timeInfo = `${daysDiff} gün sonra`;
+                        }
+                    } else {
+                        if (minutesDiff < 60) {
+                            timeInfo = `${minutesDiff} dk önce`;
+                        } else if (hoursDiff < 24) {
+                            timeInfo = `${hoursDiff} saat önce`;
+                        } else {
+                            timeInfo = `${daysDiff} gün önce`;
+                        }
+                    }
+
+                    return `
+                        <div class="bg-x-dark border border-x-light-gray rounded-lg p-6 mb-4 hover:border-x-blue transition-colors duration-200 animate-fade-in">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="flex-1 mr-4">
+                                    <p class="text-white text-lg mb-3 leading-relaxed">${tweet.text}</p>
+                                    <div class="flex items-center space-x-4 text-sm">
+                                        <div class="flex items-center text-x-light-gray">
+                                            <i class="fas fa-calendar mr-2"></i>
+                                            <span>${timeDisplay}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-clock mr-2 ${isUpcoming ? 'text-x-blue' : 'text-x-light-gray'}"></i>
+                                            <span class="${isUpcoming ? 'text-x-blue' : 'text-x-light-gray'}">${timeInfo}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button
+                                        class="p-2 bg-x-gray hover:bg-x-light-gray text-x-light-gray hover:text-white rounded-lg transition-colors duration-200"
+                                        onclick="editTweet('${tweet.id}', '${tweet.text.replace(/'/g, "\\'").replace(/"/g, '\\"')}', '${tweet.runAt}')"
+                                        title="Düzenle"
+                                    >
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button
+                                        class="p-2 bg-x-gray hover:bg-x-red text-x-light-gray hover:text-white rounded-lg transition-colors duration-200"
+                                        onclick="deleteTweet('${tweet.id}')"
+                                        title="Sil"
+                                    >
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <span class="px-3 py-1 ${statusClass} rounded-full text-sm font-medium">
+                                        ${statusText}
+                                    </span>
+                                    ${tweet.attempts > 0 ? `<span class="px-2 py-1 bg-x-light-gray text-x-dark rounded-full text-xs">${tweet.attempts} deneme</span>` : ''}
+                                </div>
+
+                                <div class="flex items-center space-x-3">
+                                    ${tweet.status === 'posted' && tweet.tweetId ?
+                                        `<a href="https://twitter.com/i/web/status/${tweet.tweetId}"
+                                           target="_blank"
+                                           class="inline-flex items-center px-4 py-2 bg-x-blue hover:bg-x-light-blue text-white rounded-lg transition-colors duration-200 text-sm">
+                                            <i class="fab fa-twitter mr-2"></i>
+                                            Twitter'da Görüntüle
+                                         </a>` : ''}
+                                    ${tweet.status === 'failed' && tweet.error ?
+                                        `<div class="text-x-red text-sm">
+                                             <i class="fas fa-exclamation-triangle mr-1"></i>
+                                             ${tweet.error}
+                                         </div>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                })
+                .join('');
+
+            document.getElementById('tweetsList').innerHTML = tweetsHtml;
+        }
+
+        // Add tweet
+        document.getElementById('tweetForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="loading me-2"></span>Ekleniyor...';
+            submitBtn.disabled = true;
+
+            try {
+                const formData = {
+                    text: document.getElementById('tweetText').value.trim(),
+                    dateTime: document.getElementById('tweetDateTime').value
+                };
+
+                const response = await fetch('/api/tweets', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Clear form
+                    document.getElementById('tweetForm').reset();
+                    document.getElementById('charCount').textContent = '0';
+
+                    // Reload data
+                    loadDashboard();
+                    loadTweets();
+
+                    // Show success message
+                    showAlert('Tweet başarıyla eklendi!', 'success');
+                } else {
+                    showAlert(result.error || 'Tweet eklenirken hata oluştu', 'danger');
+                }
+            } catch (error) {
+                console.error('Tweet ekleme hatası:', error);
+                showAlert('Tweet eklenirken hata oluştu', 'danger');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Edit tweet
+        function editTweet(id, text, runAt) {
+            currentTweetId = id;
+            const date = new Date(runAt);
+
+            document.getElementById('editText').value = text;
+            // Format for datetime-local input: YYYY-MM-DDTHH:MM
+            const localDateTime = date.toLocaleString('sv-SE', {
+                timeZone: 'Europe/Istanbul',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            }).replace(' ', 'T');
+            document.getElementById('editDateTime').value = localDateTime;
+
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        // Update tweet
+        async function updateTweet() {
+            if (!currentTweetId) return;
+
+            try {
+                const formData = {
+                    text: document.getElementById('editText').value.trim(),
+                    dateTime: document.getElementById('editDateTime').value
+                };
+
+                const response = await fetch(`/api/tweets/${currentTweetId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
+                    loadDashboard();
+                    loadTweets();
+                    showAlert('Tweet güncellendi!', 'success');
+                } else {
+                    showAlert(result.error || 'Tweet güncellenirken hata oluştu', 'danger');
+                }
+            } catch (error) {
+                console.error('Tweet güncelleme hatası:', error);
+                showAlert('Tweet güncellenirken hata oluştu', 'danger');
+            }
+        }
+
+        // Delete tweet
+        async function deleteTweet(id) {
+            if (!confirm('Bu tweet\'i silmek istediğinizden emin misiniz?')) return;
+
+            try {
+                const response = await fetch(`/api/tweets/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    loadDashboard();
+                    loadTweets();
+                    showAlert('Tweet silindi!', 'success');
+                } else {
+                    showAlert(result.error || 'Tweet silinirken hata oluştu', 'danger');
+                }
+            } catch (error) {
+                console.error('Tweet silme hatası:', error);
+                showAlert('Tweet silinirken hata oluştu', 'danger');
+            }
+        }
+
+        // Show alert
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            document.body.appendChild(alertDiv);
+
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        // Start auto refresh
+        function startAutoRefresh() {
+            // Update dashboard every 30 seconds
+            autoRefreshInterval = setInterval(() => {
+                loadDashboard();
+                loadTweets();
+            }, 30000);
+
+            console.log('🔄 Otomatik güncelleme başlatıldı (30 saniyede bir)');
+        }
+
+        // Stop auto refresh
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+                console.log('⏹️ Otomatik güncelleme durduruldu');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTime();
+            setInterval(updateTime, 1000);
+
+            // Initial load
+            loadDashboard();
+            loadTweets();
+
+            // Start auto refresh
+            startAutoRefresh();
+
+            // Set default datetime to 1 hour from now
+            const now = new Date();
+            now.setHours(now.getHours() + 1);
+            const defaultDateTime = now.toLocaleString('sv-SE', {
+                timeZone: 'Europe/Istanbul',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            }).replace(' ', 'T');
+            document.getElementById('tweetDateTime').value = defaultDateTime;
+        });
+
+        // Handle page visibility change for auto refresh
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                stopAutoRefresh();
+            } else {
+                loadDashboard();
+                loadTweets();
+                startAutoRefresh();
+            }
+        });
+    </script>
+</body>
+</html>
